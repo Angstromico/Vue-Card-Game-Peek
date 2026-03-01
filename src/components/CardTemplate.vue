@@ -1,0 +1,70 @@
+<script setup lang="ts">
+import type { ICard } from '../interfaces'
+
+interface Props {
+  isCardFlipped: (cardId: number) => boolean
+  matchedCards: number[]
+  card: ICard
+}
+
+const props = defineProps<Props>()
+const { isCardFlipped, matchedCards, card } = props
+</script>
+
+<template>
+  <div
+    class="card"
+    :class="{
+      'is-flipped': isCardFlipped(card.id),
+      'is-matched': matchedCards.includes(card.id),
+    }"
+  >
+    <div class="face front">?</div>
+    <div class="face back">
+      {{ card.nameBack }}
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.card.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.2rem;
+}
+
+.back {
+  background-color: #42b883;
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.front {
+  background-color: #f9f9f9;
+}
+
+.card.is-matched .face.back {
+  background-color: #2c3e50;
+  border-color: #42b883;
+}
+</style>
