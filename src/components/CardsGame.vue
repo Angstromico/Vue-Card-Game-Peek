@@ -21,6 +21,14 @@ const cardInfo = [
   { id: 15, name: 'Card 15', nameBack: 'Back 15' },
   { id: 16, name: 'Card 16', nameBack: 'Back 16' },
 ]
+//The toggle is activated in hover, I want to activate it in click, not when hovering the card
+const toggleCard = (cardId: number) => {
+  if (selectedCard.value === cardId) {
+    selectedCard.value = null
+  } else {
+    selectedCard.value = cardId
+  }
+}
 </script>
 
 <template>
@@ -29,8 +37,7 @@ const cardInfo = [
       v-for="card in cardInfo"
       :key="card.id"
       class="card-container"
-      @mouseenter="selectedCard = card.id"
-      @mouseleave="selectedCard = null"
+      @click="toggleCard(card.id)"
     >
       <div class="card" :class="{ 'is-flipped': selectedCard === card.id }">
         <div class="face front">
@@ -95,7 +102,7 @@ const cardInfo = [
   background-color: #f9f9f9;
 }
 
-.card-container:hover .card {
+/* .card-container:hover .card {
   transform: rotateY(180deg);
-}
+} */
 </style>
