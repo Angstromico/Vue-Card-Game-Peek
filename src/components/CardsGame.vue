@@ -1,33 +1,73 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const selectedCard = ref<number | null>(null)
+interface Card {
+  id: number
+  name: string
+  nameBack: string
+}
+
+const choosenCards = ref<Card[]>([])
+const matchedCards = ref<number[]>([])
+const isBusy = ref(false)
 
 const cardInfo = [
-  { id: 1, name: 'Card 1', nameBack: 'Back 1' },
-  { id: 2, name: 'Card 2', nameBack: 'Back 2' },
-  { id: 3, name: 'Card 3', nameBack: 'Back 3' },
-  { id: 4, name: 'Card 4', nameBack: 'Back 4' },
-  { id: 5, name: 'Card 5', nameBack: 'Back 5' },
-  { id: 6, name: 'Card 6', nameBack: 'Back 6' },
-  { id: 7, name: 'Card 7', nameBack: 'Back 7' },
-  { id: 8, name: 'Card 8', nameBack: 'Back 8' },
-  { id: 9, name: 'Card 9', nameBack: 'Back 9' },
-  { id: 10, name: 'Card 10', nameBack: 'Back 10' },
-  { id: 11, name: 'Card 11', nameBack: 'Back 11' },
-  { id: 12, name: 'Card 12', nameBack: 'Back 12' },
-  { id: 13, name: 'Card 13', nameBack: 'Back 13' },
-  { id: 14, name: 'Card 14', nameBack: 'Back 14' },
-  { id: 15, name: 'Card 15', nameBack: 'Back 15' },
-  { id: 16, name: 'Card 16', nameBack: 'Back 16' },
+  { id: 1, name: 'Card 1', nameBack: 'Apple' },
+  { id: 2, name: 'Card 2', nameBack: 'Apple' },
+  { id: 3, name: 'Card 3', nameBack: 'Banana' },
+  { id: 4, name: 'Card 4', nameBack: 'Banana' },
+  { id: 5, name: 'Card 5', nameBack: 'Orange' },
+  { id: 6, name: 'Card 6', nameBack: 'Orange' },
+  { id: 7, name: 'Card 7', nameBack: 'Grape' },
+  { id: 8, name: 'Card 8', nameBack: 'Grape' },
+  { id: 9, name: 'Card 9', nameBack: 'Cherry' },
+  { id: 10, name: 'Card 10', nameBack: 'Cherry' },
+  { id: 11, name: 'Card 11', nameBack: 'Mango' },
+  { id: 12, name: 'Card 12', nameBack: 'Mango' },
+  { id: 13, name: 'Card 13', nameBack: 'Berry' },
+  { id: 14, name: 'Card 14', nameBack: 'Berry' },
+  { id: 15, name: 'Card 15', nameBack: 'Lemon' },
+  { id: 16, name: 'Card 16', nameBack: 'Lemon' },
 ]
-//The toggle is activated in hover, I want to activate it in click, not when hovering the card
+
 const toggleCard = (cardId: number) => {
-  if (selectedCard.value === cardId) {
-    selectedCard.value = null
-  } else {
-    selectedCard.value = cardId
+  if (
+    isBusy.value ||
+    matchedCards.value.includes(cardId) ||
+    choosenCards.value.some((c) => c.id === cardId)
+  )
+    return
+
+  const card = cardInfo.find((c) => c.id === cardId)
+  if (!card) return
+
+  choosenCards.value.push(card)
+
+  if (choosenCards.value.length === 2) {
+    checkMatch()
   }
+}
+
+const checkMatch = () => {
+  const [first, second] = choosenCards.value
+
+  if (first && second && first.nameBack === second.nameBack) {
+    matchedCards.value.push(first.id, second.id)
+    choosenCards.value = []
+  } else {
+    isBusy.value = true
+    setTimeout(() => {
+      choosenCards.value = []
+      isBusy.value = false
+    }, 1000)
+  }
+}
+
+const isCardFlipped = (cardId: number) => {
+  return (
+    choosenCards.value.some((c) => c.id === cardId) ||
+    matchedCards.value.includes(cardId)
+  )
 }
 </script>
 
@@ -39,16 +79,22 @@ const toggleCard = (cardId: number) => {
       class="card-container"
       @click="toggleCard(card.id)"
     >
-      <div class="card" :class="{ 'is-flipped': selectedCard === card.id }">
-        <div class="face front">
-          {{ card.name }}
-        </div>
+      <div
+        class="card"
+        :class="{
+          'is-flipped': isCardFlipped(card.id),
+          'is-matched': matchedCards.includes(card.id),
+        }"
+      >
+        <div class="face front">?</div>
         <div class="face back">
           {{ card.nameBack }}
         </div>
       </div>
     </div>
   </div>
+
+  <div class="status">Matches: {{ matchedCards.length / 2 }} / 8</div>
 </template>
 
 <style scoped>
@@ -100,6 +146,18 @@ const toggleCard = (cardId: number) => {
 
 .front {
   background-color: #f9f9f9;
+}
+
+.card.is-matched .face.back {
+  background-color: #2c3e50;
+  border-color: #42b883;
+}
+
+.status {
+  text-align: center;
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 /* .card-container:hover .card {
