@@ -1,21 +1,27 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import CardsGame from './components/CardsGame.vue'
+import { onMounted, ref } from 'vue'
+import { CardsGame, FiguresButton } from './components'
 import { cardImagesLinks } from './data'
-import type { IMainCard } from './interfaces'
 import useGenerateGame from './composables/useGenerateGame'
 
-const cardInfo = ref<IMainCard[]>([])
+const gameKey = ref(0)
+const { cardInfo, generate } = useGenerateGame(cardImagesLinks)
+
+const handleReset = () => {
+  generate()
+  gameKey.value++
+}
 
 onMounted(() => {
-  useGenerateGame(cardImagesLinks, cardInfo)
+  generate()
 })
 </script>
 
 <template>
   <h1>Peek a Card</h1>
   <section v-if="cardInfo.length" class="game-board">
-    <CardsGame :cardInfo="cardInfo" />
+    <CardsGame :cardInfo="cardInfo" :key="gameKey" />
+    <FiguresButton :onClick="handleReset" />
   </section>
 </template>
 
