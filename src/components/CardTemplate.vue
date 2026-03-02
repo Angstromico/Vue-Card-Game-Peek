@@ -20,9 +20,10 @@ const { isCardFlipped, matchedCards, card } = props
     }"
   >
     <div class="face front">?</div>
-    <div class="face back">
-      {{ card.nameBack }}
-    </div>
+    <div
+      class="face back"
+      :style="{ backgroundImage: `url(${card.nameBack})` }"
+    ></div>
   </div>
 </template>
 
@@ -57,6 +58,11 @@ const { isCardFlipped, matchedCards, card } = props
   background-color: #42b883;
   color: white;
   transform: rotateY(180deg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  background-color: #cccccc;
 }
 
 .front {
