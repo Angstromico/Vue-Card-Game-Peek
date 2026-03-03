@@ -2,6 +2,9 @@
 import { ref } from 'vue'
 import type { ICard } from '../interfaces'
 import CardTemplate from './CardTemplate.vue'
+import useGameState from '../composables/useGameState'
+import GameStatus from './GameStatus.vue'
+import GameOverlay from './GameOverlay.vue'
 
 interface Props {
   cardInfo: {
@@ -11,6 +14,8 @@ interface Props {
   }[]
 }
 
+const emit = defineEmits(['restart'])
+
 const choosenCards = ref<ICard[]>([])
 const matchedCards = ref<number[]>([])
 const isBusy = ref(false)
@@ -18,9 +23,12 @@ const isBusy = ref(false)
 const props = defineProps<Props>()
 const { cardInfo } = props
 
+const { registerAttempt, endGame, gameStatus } = useGameState()
+
 const toggleCard = (cardId: number) => {
   if (
     isBusy.value ||
+    gameStatus.value !== 'playing' ||
     matchedCards.value.includes(cardId) ||
     choosenCards.value.some((c) => c.id === cardId)
   )
@@ -32,6 +40,7 @@ const toggleCard = (cardId: number) => {
   choosenCards.value.push(card)
 
   if (choosenCards.value.length === 2) {
+    registerAttempt()
     checkMatch()
   }
 }
@@ -42,6 +51,10 @@ const checkMatch = () => {
   if (first && second && first.nameBack === second.nameBack) {
     matchedCards.value.push(first.id, second.id)
     choosenCards.value = []
+
+    if (matchedCards.value.length === cardInfo.length) {
+      endGame('won')
+    }
   } else {
     isBusy.value = true
     setTimeout(() => {
@@ -60,25 +73,35 @@ const isCardFlipped = (cardId: number) => {
 </script>
 
 <template>
-  <div class="board">
-    <div
-      v-for="card in cardInfo"
-      :key="card.id"
-      class="card-container"
-      @click="toggleCard(card.id)"
-    >
-      <CardTemplate
-        :card="card"
-        :isCardFlipped="isCardFlipped"
-        :matchedCards="matchedCards"
-      />
+  <div class="board-wrapper">
+    <div class="board">
+      <div
+        v-for="card in cardInfo"
+        :key="card.id"
+        class="card-container"
+        @click="toggleCard(card.id)"
+      >
+        <CardTemplate
+          :card="card"
+          :isCardFlipped="isCardFlipped"
+          :matchedCards="matchedCards"
+        />
+      </div>
     </div>
+    <GameOverlay @restart="$emit('restart')" />
   </div>
 
-  <div class="status">Matches: {{ matchedCards.length / 2 }} / 8</div>
+  <GameStatus
+    :matchesCount="matchedCards.length / 2"
+    :totalMatches="cardInfo.length / 2"
+  />
 </template>
 
 <style scoped>
+.board-wrapper {
+  position: relative;
+}
+
 .board {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -92,15 +115,4 @@ const isCardFlipped = (cardId: number) => {
   aspect-ratio: 3 / 4;
   perspective: 1000px;
 }
-
-.status {
-  text-align: center;
-  margin-top: 20px;
-  font-weight: bold;
-  font-size: 1.2rem;
-}
-
-/* .card-container:hover .card {
-  transform: rotateY(180deg);
-} */
 </style>
