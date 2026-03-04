@@ -5,6 +5,7 @@ import {
   timeLimit,
   isAttemptLimitEnabled,
   attemptLimit,
+  isSoundEnabled,
 } from '../composables/useGameSettings'
 import useI18n from '../composables/useI18n'
 
@@ -15,6 +16,7 @@ const localIsTimeLimitEnabled = ref(isTimeLimitEnabled.value)
 const localTimeLimit = ref(timeLimit.value)
 const localIsAttemptLimitEnabled = ref(isAttemptLimitEnabled.value)
 const localAttemptLimit = ref(attemptLimit.value)
+const localIsSoundEnabled = ref(isSoundEnabled.value)
 
 // Reset local state when modal opens
 watchEffect(() => {
@@ -22,6 +24,7 @@ watchEffect(() => {
   localTimeLimit.value = timeLimit.value
   localIsAttemptLimitEnabled.value = isAttemptLimitEnabled.value
   localAttemptLimit.value = attemptLimit.value
+  localIsSoundEnabled.value = isSoundEnabled.value
 })
 
 const saveSettings = () => {
@@ -29,6 +32,7 @@ const saveSettings = () => {
   timeLimit.value = localTimeLimit.value
   isAttemptLimitEnabled.value = localIsAttemptLimitEnabled.value
   attemptLimit.value = localAttemptLimit.value
+  isSoundEnabled.value = localIsSoundEnabled.value
   emit('save')
   emit('close')
 }
@@ -46,6 +50,13 @@ const saveSettings = () => {
             <option value="en">English</option>
             <option value="es">Español</option>
           </select>
+        </label>
+      </div>
+
+      <div class="setting-group">
+        <label>
+          <input type="checkbox" v-model="localIsSoundEnabled" />
+          {{ t('enableSound').value }}
         </label>
       </div>
 

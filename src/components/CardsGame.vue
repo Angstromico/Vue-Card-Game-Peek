@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import type { ICard } from '../interfaces'
 import CardTemplate from './CardTemplate.vue'
 import useGameState from '../composables/useGameState'
+import useSounds from '../composables/useSounds'
 import GameStatus from './GameStatus.vue'
 import GameOverlay from './GameOverlay.vue'
 
@@ -24,6 +25,17 @@ const props = defineProps<Props>()
 const { cardInfo } = props
 
 const { registerAttempt, endGame, gameStatus, isPaused } = useGameState()
+const { playSound } = useSounds()
+
+import { watch } from 'vue'
+
+watch(gameStatus, (newStatus) => {
+  if (newStatus === 'won') {
+    playSound('win')
+  } else if (newStatus === 'lost_time' || newStatus === 'lost_attempts') {
+    playSound('loss')
+  }
+})
 
 const toggleCard = (cardId: number) => {
   if (
@@ -38,6 +50,7 @@ const toggleCard = (cardId: number) => {
   const card = cardInfo.find((c) => c.id === cardId)
   if (!card) return
 
+  playSound('flip')
   choosenCards.value.push(card)
 
   if (choosenCards.value.length === 2) {
@@ -50,6 +63,7 @@ const checkMatch = () => {
   const [first, second] = choosenCards.value
 
   if (first && second && first.nameBack === second.nameBack) {
+    playSound('success')
     matchedCards.value.push(first.id, second.id)
     choosenCards.value = []
 
@@ -57,6 +71,7 @@ const checkMatch = () => {
       endGame('won')
     }
   } else {
+    playSound('fail')
     isBusy.value = true
     setTimeout(() => {
       choosenCards.value = []
