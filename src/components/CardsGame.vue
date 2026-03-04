@@ -23,11 +23,12 @@ const isBusy = ref(false)
 const props = defineProps<Props>()
 const { cardInfo } = props
 
-const { registerAttempt, endGame, gameStatus } = useGameState()
+const { registerAttempt, endGame, gameStatus, isPaused } = useGameState()
 
 const toggleCard = (cardId: number) => {
   if (
     isBusy.value ||
+    isPaused.value ||
     gameStatus.value !== 'playing' ||
     matchedCards.value.includes(cardId) ||
     choosenCards.value.some((c) => c.id === cardId)

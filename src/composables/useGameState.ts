@@ -12,6 +12,7 @@ export const attemptsUsed = ref(0)
 export const gameStatus = ref<
   'playing' | 'won' | 'lost_time' | 'lost_attempts'
 >('playing')
+export const isPaused = ref(false)
 
 let timerInterval: number | undefined
 
@@ -22,14 +23,17 @@ export default function useGameState() {
     gameStatus.value = 'playing'
     attemptsUsed.value = 0
     timeLeft.value = timeLimit.value
+    isPaused.value = false
 
     clearInterval(timerInterval)
     if (isTimeLimitEnabled.value) {
       timerInterval = window.setInterval(() => {
-        if (timeLeft.value > 0) {
-          timeLeft.value--
-        } else {
-          endGame('lost_time')
+        if (!isPaused.value) {
+          if (timeLeft.value > 0) {
+            timeLeft.value--
+          } else {
+            endGame('lost_time')
+          }
         }
       }, 1000)
     }
@@ -64,6 +68,7 @@ export default function useGameState() {
     attemptsUsed,
     attemptsLeft,
     gameStatus,
+    isPaused,
     startGame,
     registerAttempt,
     endGame,

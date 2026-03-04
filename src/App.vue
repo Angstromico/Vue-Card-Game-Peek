@@ -12,7 +12,7 @@ import useGameState from './composables/useGameState'
 
 const gameKey = ref(0)
 const { cardInfo, generate } = useGenerateGame(cardImagesLinks)
-const { resetGame } = useGameState()
+const { resetGame, isPaused } = useGameState()
 
 const isSettingsOpen = ref(false)
 
@@ -20,6 +20,16 @@ const handleReset = () => {
   generate()
   gameKey.value++
   resetGame()
+}
+
+const handlePause = () => {
+  isPaused.value = true
+  isSettingsOpen.value = true
+}
+
+const handleCloseSettings = () => {
+  isSettingsOpen.value = false
+  isPaused.value = false
 }
 
 onMounted(() => {
@@ -30,12 +40,12 @@ onMounted(() => {
 <template>
   <header class="app-header">
     <h1>Peek a Card</h1>
-    <SettingsButton @click="isSettingsOpen = true" />
+    <SettingsButton @click="handlePause" />
   </header>
 
   <SettingsModal
     v-if="isSettingsOpen"
-    @close="isSettingsOpen = false"
+    @close="handleCloseSettings"
     @save="handleReset"
   />
 
