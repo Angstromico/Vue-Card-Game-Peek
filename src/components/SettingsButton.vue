@@ -30,7 +30,7 @@ const emit = defineEmits(['click'])
 .settings-btn {
   background: none;
   border: none;
-  color: #000;
+  color: var(--text-main);
   cursor: pointer;
   padding: 8px;
   border-radius: 50%;

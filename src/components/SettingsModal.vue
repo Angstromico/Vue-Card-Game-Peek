@@ -6,8 +6,10 @@ import {
   isAttemptLimitEnabled,
   attemptLimit,
 } from '../composables/useGameSettings'
+import useI18n from '../composables/useI18n'
 
 const emit = defineEmits(['close', 'save'])
+const { t, locale } = useI18n()
 
 const localIsTimeLimitEnabled = ref(isTimeLimitEnabled.value)
 const localTimeLimit = ref(timeLimit.value)
@@ -35,15 +37,25 @@ const saveSettings = () => {
 <template>
   <div class="modal-backdrop" @click.self="$emit('close')">
     <div class="modal-content">
-      <h2>Game Settings</h2>
+      <h2>{{ t('settings').value }}</h2>
+
+      <div class="setting-group">
+        <label>
+          {{ t('language').value }}
+          <select v-model="locale" class="lang-select">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+        </label>
+      </div>
 
       <div class="setting-group">
         <label>
           <input type="checkbox" v-model="localIsTimeLimitEnabled" />
-          Enable Time Limit
+          {{ t('enableTimeLimit').value }}
         </label>
         <div v-if="localIsTimeLimitEnabled" class="input-row">
-          <label for="timeLimit">Time (seconds):</label>
+          <label for="timeLimit">{{ t('timeLimitSeconds').value }}</label>
           <input
             id="timeLimit"
             type="number"
@@ -56,10 +68,10 @@ const saveSettings = () => {
       <div class="setting-group">
         <label>
           <input type="checkbox" v-model="localIsAttemptLimitEnabled" />
-          Enable Attempt Limit
+          {{ t('enableAttemptLimit').value }}
         </label>
         <div v-if="localIsAttemptLimitEnabled" class="input-row">
-          <label for="attemptLimit">Max Attempts:</label>
+          <label for="attemptLimit">{{ t('maxAttempts').value }}</label>
           <input
             id="attemptLimit"
             type="number"
@@ -70,8 +82,12 @@ const saveSettings = () => {
       </div>
 
       <div class="actions">
-        <button class="btn-cancel" @click="$emit('close')">Cancel</button>
-        <button class="btn-save" @click="saveSettings">Save & Restart</button>
+        <button class="btn-cancel" @click="$emit('close')">
+          {{ t('cancel').value }}
+        </button>
+        <button class="btn-save" @click="saveSettings">
+          {{ t('saveRestart').value }}
+        </button>
       </div>
     </div>
   </div>
@@ -93,13 +109,13 @@ const saveSettings = () => {
 }
 
 .modal-content {
-  background: #1e1e2f;
+  background: var(--bg-panel);
   border-radius: 12px;
   padding: 30px;
   width: 90%;
   max-width: 400px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-  color: #fff;
+  color: var(--text-main);
 }
 
 h2 {
@@ -107,12 +123,12 @@ h2 {
   text-align: center;
   margin-bottom: 20px;
   font-family: inherit;
-  color: #42b883;
+  color: var(--primary);
 }
 
 .setting-group {
   margin-bottom: 20px;
-  background: #2a2a3f;
+  background: var(--bg-panel-light);
   padding: 15px;
   border-radius: 8px;
 }
@@ -128,7 +144,7 @@ label {
 input[type='checkbox'] {
   width: 18px;
   height: 18px;
-  accent-color: #42b883;
+  accent-color: var(--primary);
 }
 
 .input-row {
@@ -139,19 +155,33 @@ input[type='checkbox'] {
   padding-left: 28px;
 }
 
+.lang-select {
+  margin-left: auto;
+  padding: 5px 10px;
+  background: var(--bg-main);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.lang-select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
 input[type='number'] {
   width: 80px;
   padding: 8px;
-  border: 1px solid #444;
+  border: 1px solid var(--border);
   border-radius: 4px;
-  background: #111;
-  color: white;
+  background: var(--bg-main);
+  color: var(--text-main);
   font-size: 1rem;
 }
 
 input[type='number']:focus {
   outline: none;
-  border-color: #42b883;
+  border-color: var(--primary);
 }
 
 .actions {
@@ -173,21 +203,21 @@ button {
 
 .btn-cancel {
   background: transparent;
-  color: #aaa;
+  color: var(--text-muted);
 }
 
 .btn-cancel:hover {
-  color: white;
+  color: var(--text-main);
   background: rgba(255, 255, 255, 0.1);
 }
 
 .btn-save {
-  background: #42b883;
-  color: #1a1a1a;
+  background: var(--primary);
+  color: var(--bg-main);
 }
 
 .btn-save:hover {
-  background: #33a06f;
+  background: var(--primary-hover);
   transform: translateY(-2px);
 }
 </style>

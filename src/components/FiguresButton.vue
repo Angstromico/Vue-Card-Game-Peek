@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-const currentColor = ref('#42b883')
+const currentColor = ref('#ff7518')
 const currentShape = ref('')
 
 const shapes = {
@@ -70,8 +70,8 @@ onMounted(() => {
   bottom: 110%;
   left: 50%;
   transform: translateX(-50%) translateY(10px);
-  background-color: #2c3e50;
-  color: white;
+  background-color: var(--bg-panel);
+  color: var(--text-main);
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 0.85rem;
@@ -91,7 +91,7 @@ onMounted(() => {
   transform: translateX(-50%) translateY(10px);
   border-width: 6px;
   border-style: solid;
-  border-color: #2c3e50 transparent transparent transparent;
+  border-color: var(--bg-panel) transparent transparent transparent;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
@@ -126,7 +126,7 @@ onMounted(() => {
 .inner-shape {
   width: 40px;
   height: 40px;
-  background-color: white;
+  background-color: var(--bg-main);
   transition: clip-path 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 </style>

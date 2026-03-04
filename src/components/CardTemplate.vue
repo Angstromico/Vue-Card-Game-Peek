@@ -49,28 +49,27 @@ const { isCardFlipped, matchedCards, card } = props
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 5px solid #ccc;
+  border: 5px solid var(--border);
   border-radius: 8px;
   font-size: 1.2rem;
 }
 
 .back {
-  background-color: #42b883;
-  color: white;
+  background-color: var(--bg-panel-light);
+  color: var(--text-main);
   transform: rotateY(180deg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   background-attachment: fixed;
-  background-color: #cccccc;
 }
 
 .front {
-  background-color: #f9f9f9;
+  background-color: var(--bg-main);
 }
 
 .card.is-matched .face.back {
-  background-color: #2c3e50;
-  border-color: #42b883;
+  background-color: var(--bg-panel);
+  border-color: var(--primary);
 }
 </style>

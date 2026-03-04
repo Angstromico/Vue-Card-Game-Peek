@@ -9,10 +9,12 @@ import {
 import { cardImagesLinks } from './data'
 import useGenerateGame from './composables/useGenerateGame'
 import useGameState from './composables/useGameState'
+import useI18n from './composables/useI18n'
 
 const gameKey = ref(0)
 const { cardInfo, generate } = useGenerateGame(cardImagesLinks)
 const { resetGame, isPaused } = useGameState()
+const { t } = useI18n()
 
 const isSettingsOpen = ref(false)
 
@@ -39,7 +41,7 @@ onMounted(() => {
 
 <template>
   <header class="app-header">
-    <h1>Peek a Card</h1>
+    <h1>{{ t('appTitle').value }}</h1>
     <SettingsButton @click="handlePause" />
   </header>
 

@@ -1,20 +1,26 @@
 <script setup lang="ts">
 import { gameStatus } from '../composables/useGameState'
+import useI18n from '../composables/useI18n'
 
 const emit = defineEmits(['restart'])
+const { t } = useI18n()
 </script>
 
 <template>
   <div v-if="gameStatus !== 'playing'" class="overlay">
     <div class="message-box" :class="gameStatus">
-      <h2 v-if="gameStatus === 'won'">🎉 You Win! 🎉</h2>
-      <h2 v-if="gameStatus === 'lost_time'">⏳ Time's Up! ⏳</h2>
-      <h2 v-if="gameStatus === 'lost_attempts'">❌ Out of Attempts! ❌</h2>
+      <h2 v-if="gameStatus === 'won'">{{ t('youWin').value }}</h2>
+      <h2 v-if="gameStatus === 'lost_time'">{{ t('timesUp').value }}</h2>
+      <h2 v-if="gameStatus === 'lost_attempts'">
+        {{ t('outOfAttempts').value }}
+      </h2>
 
-      <p v-if="gameStatus === 'won'">Great memory!</p>
-      <p v-if="gameStatus !== 'won'">Better luck next time.</p>
+      <p v-if="gameStatus === 'won'">{{ t('greatMemory').value }}</p>
+      <p v-if="gameStatus !== 'won'">{{ t('betterLuck').value }}</p>
 
-      <button class="restart-btn" @click="$emit('restart')">Play Again</button>
+      <button class="restart-btn" @click="$emit('restart')">
+        {{ t('playAgain').value }}
+      </button>
     </div>
   </div>
 </template>
@@ -36,7 +42,7 @@ const emit = defineEmits(['restart'])
 }
 
 .message-box {
-  background: #2a2a3f;
+  background: var(--bg-panel-light);
   padding: 40px;
   border-radius: 16px;
   text-align: center;
@@ -46,29 +52,29 @@ const emit = defineEmits(['restart'])
 }
 
 .message-box.won {
-  border: 2px solid #42b883;
+  border: 2px solid var(--primary);
 }
 
 .message-box.lost_time,
 .message-box.lost_attempts {
-  border: 2px solid #ff4757;
+  border: 2px solid var(--error);
 }
 
 h2 {
   margin: 0 0 10px 0;
   font-size: 2rem;
-  color: white;
+  color: var(--text-main);
 }
 
 p {
-  color: #bbb;
+  color: var(--text-muted);
   margin-bottom: 25px;
   font-size: 1.1rem;
 }
 
 .restart-btn {
-  background: #42b883;
-  color: #1a1a1a;
+  background: var(--primary);
+  color: var(--bg-main);
   border: none;
   padding: 12px 30px;
   font-size: 1.2rem;
@@ -76,11 +82,11 @@ p {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 10px rgba(66, 184, 131, 0.3);
+  box-shadow: 0 4px 10px rgba(255, 117, 24, 0.3);
 }
 
 .restart-btn:hover {
-  background: #33a06f;
+  background: var(--primary-hover);
   transform: scale(1.05);
 }
 
