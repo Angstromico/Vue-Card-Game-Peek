@@ -19,7 +19,12 @@ const { isCardFlipped, matchedCards, card } = props
       'is-matched': matchedCards.includes(card.id),
     }"
   >
-    <div class="face front">?</div>
+    <div
+      class="face front"
+      :style="{ backgroundImage: `url(/cards/generic.webp)` }"
+    >
+      ?
+    </div>
     <div
       class="face back"
       :style="{ backgroundImage: `url(${card.nameBack})` }"
@@ -41,6 +46,14 @@ const { isCardFlipped, matchedCards, card } = props
   transform: rotateY(180deg);
 }
 
+.face,
+.back {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
 .face {
   position: absolute;
   width: 100%;
@@ -58,10 +71,6 @@ const { isCardFlipped, matchedCards, card } = props
   background-color: var(--bg-panel-light);
   color: var(--text-main);
   transform: rotateY(180deg);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  background-attachment: fixed;
 }
 
 .front {
