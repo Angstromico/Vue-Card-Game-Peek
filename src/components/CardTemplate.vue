@@ -51,7 +51,6 @@ const { isCardFlipped, matchedCards, card } = props
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  background-attachment: fixed;
 }
 
 .face {
