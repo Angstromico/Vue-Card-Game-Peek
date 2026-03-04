@@ -1,9 +1,17 @@
 <script setup lang="ts">
+import { watch } from 'vue'
 import { gameStatus } from '../composables/useGameState'
 import useI18n from '../composables/useI18n'
+import { launchConfetti } from '../utilities/confetti'
 
 const emit = defineEmits(['restart'])
 const { t } = useI18n()
+
+watch(gameStatus, (newStatus) => {
+  if (newStatus === 'won') {
+    launchConfetti()
+  }
+})
 </script>
 
 <template>
