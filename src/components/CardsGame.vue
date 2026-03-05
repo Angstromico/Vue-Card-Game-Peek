@@ -22,6 +22,7 @@ const choosenCards = ref<ICard[]>([])
 const matchedCards = ref<number[]>([])
 const isBusy = ref(false)
 const temporarilyFlippedCards = ref<number[]>([])
+const isShuffling = ref(false)
 
 const props = defineProps<Props>()
 const { cardInfo } = props
@@ -109,6 +110,8 @@ const checkMatch = () => {
 }
 
 const isCardFlipped = (cardId: number) => {
+  if (isShuffling.value) return false
+
   if (gameStatus.value === 'ready') {
     // In ready state, first 8 are flipped UP, UNLESS they are in temporarilyFlippedCards
     const cardIndex = cardInfo.findIndex((c) => c.id === cardId)
@@ -126,25 +129,27 @@ const startShuffleAnimation = () => {
   if (gameStatus.value !== 'ready') return
 
   isBusy.value = true
-  // Force all cards face down by removing them from the temporarily flipped array
-  // Wait, no, they are considered face up if gameStatus === 'ready', except if temporarilyFlippedCards has them.
-  // Actually, once we move out of 'ready' state, they will all be face down normally.
-  // Let's change state to 'shuffling' or just set a local flag `isShuffling`.
+  isShuffling.value = true
+  playSound('flip')
 
-  let shuffles = 0
-  const shuffleInterval = setInterval(() => {
-    emit('shuffleSelectedCards')
-    playSound('flip') // Play sound during shuffle
-    shuffles++
+  // Wait for the face-down flip animation to complete (0.6s) before reordering
+  setTimeout(() => {
+    let shuffles = 0
+    const shuffleInterval = setInterval(() => {
+      emit('shuffleSelectedCards')
+      playSound('flip') // Play sound during shuffle
+      shuffles++
 
-    if (shuffles >= 3) {
-      clearInterval(shuffleInterval)
-      setTimeout(() => {
-        isBusy.value = false
-        startGame() // Finally start the game timer, transitions to 'playing'
-      }, 500)
-    }
-  }, 600) // Shuffle every 600ms
+      if (shuffles >= 3) {
+        clearInterval(shuffleInterval)
+        setTimeout(() => {
+          isBusy.value = false
+          isShuffling.value = false
+          startGame() // Finally start the game timer, transitions to 'playing'
+        }, 500)
+      }
+    }, 600) // Shuffle every 600ms
+  }, 600)
 }
 </script>
 
