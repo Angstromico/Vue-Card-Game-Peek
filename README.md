@@ -1,5 +1,7 @@
 # Peek - Vue 3 Card Game
 
+![alt text](readme.png)
+
 A memory card matching game built with Vue 3, TypeScript, and Vite. This application demonstrates modern Vue 3 development practices using `<script setup>` Single File Components and Composables for state management, while featuring a highly customizable and aesthetically pleasing interface.
 
 ## About the Game
