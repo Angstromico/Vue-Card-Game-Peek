@@ -9,14 +9,20 @@ export default function useGenerateGame(imagesSource: string[]) {
       .sort(() => 0.5 - Math.random())
       .slice(0, 8)
 
+    // Unshuffled deck for the initial 'ready' state
     const deck: IMainCard[] = []
 
+    // First 8 cards
     selectedImages.forEach((img, index) => {
       deck.push({
         id: index * 2 + 1,
         name: `Card ${index * 2 + 1}`,
         nameBack: `/cards/${img}`,
       })
+    })
+
+    // Matching pairs for the next 8 cards
+    selectedImages.forEach((img, index) => {
       deck.push({
         id: index * 2 + 2,
         name: `Card ${index * 2 + 2}`,
@@ -24,11 +30,16 @@ export default function useGenerateGame(imagesSource: string[]) {
       })
     })
 
-    cardInfo.value = deck.sort(() => 0.5 - Math.random())
+    cardInfo.value = deck
+  }
+
+  const shuffleCards = () => {
+    cardInfo.value = [...cardInfo.value].sort(() => 0.5 - Math.random())
   }
 
   return {
     cardInfo,
     generate,
+    shuffleCards,
   }
 }

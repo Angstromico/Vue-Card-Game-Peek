@@ -25,6 +25,7 @@ const messages = {
     greatMemory: 'Great memory!',
     betterLuck: 'Better luck next time.',
     playAgain: 'Play Again',
+    startGame: 'Start Game',
   },
   es: {
     appTitle: 'Encuentra la Pareja',
@@ -46,6 +47,7 @@ const messages = {
     greatMemory: '¡Qué gran memoria!',
     betterLuck: 'Mejor suerte la próxima vez.',
     playAgain: 'Jugar de Nuevo',
+    startGame: 'Iniciar Juego',
   },
 }
 

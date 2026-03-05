@@ -12,7 +12,7 @@ import useGameState from './composables/useGameState'
 import useI18n from './composables/useI18n'
 
 const gameKey = ref(0)
-const { cardInfo, generate } = useGenerateGame(cardImagesLinks)
+const { cardInfo, generate, shuffleCards } = useGenerateGame(cardImagesLinks)
 const { resetGame, isPaused } = useGameState()
 const { t } = useI18n()
 
@@ -52,7 +52,12 @@ onMounted(() => {
   />
 
   <section v-if="cardInfo.length" class="game-board">
-    <CardsGame :cardInfo="cardInfo" :key="gameKey" @restart="handleReset" />
+    <CardsGame
+      :cardInfo="cardInfo"
+      :key="gameKey"
+      @restart="handleReset"
+      @shuffleSelectedCards="shuffleCards"
+    />
     <FiguresButton :onClick="handleReset" />
   </section>
 </template>

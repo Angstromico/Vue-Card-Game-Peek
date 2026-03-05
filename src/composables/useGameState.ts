@@ -10,8 +10,8 @@ import {
 export const timeLeft = ref(timeLimit.value)
 export const attemptsUsed = ref(0)
 export const gameStatus = ref<
-  'playing' | 'won' | 'lost_time' | 'lost_attempts'
->('playing')
+  'ready' | 'playing' | 'won' | 'lost_time' | 'lost_attempts'
+>('ready')
 export const isPaused = ref(false)
 
 let timerInterval: number | undefined
@@ -60,7 +60,11 @@ export default function useGameState() {
   }
 
   const resetGame = () => {
-    startGame()
+    gameStatus.value = 'ready'
+    attemptsUsed.value = 0
+    timeLeft.value = timeLimit.value
+    isPaused.value = false
+    clearInterval(timerInterval)
   }
 
   return {

@@ -15,7 +15,10 @@ watch(gameStatus, (newStatus) => {
 </script>
 
 <template>
-  <div v-if="gameStatus !== 'playing'" class="overlay">
+  <div
+    v-if="gameStatus !== 'playing' && gameStatus !== 'ready'"
+    class="overlay"
+  >
     <div class="message-box" :class="gameStatus">
       <h2 v-if="gameStatus === 'won'">{{ t('youWin').value }}</h2>
       <h2 v-if="gameStatus === 'lost_time'">{{ t('timesUp').value }}</h2>
